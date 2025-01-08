@@ -87,53 +87,89 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Valorant Stats Tracker</h1>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1 style={{ textAlign: 'center' }}>Valorant Stats Tracker</h1>
 
       {/* フォーム */}
-      <form onSubmit={handleSubmit}>
-        <input name="map" placeholder="Map" value={formData.map} onChange={handleChange} required />
-        <input name="character" placeholder="Character" value={formData.character} onChange={handleChange} required />
-        <input name="acs" type="number" placeholder="ACS" value={formData.acs} onChange={handleChange} required />
-        <input name="kills" type="number" placeholder="Kills" value={formData.kills} onChange={handleChange} required />
-        <input name="deaths" type="number" placeholder="Deaths" value={formData.deaths} onChange={handleChange} required />
-        <input name="assists" type="number" placeholder="Assists" value={formData.assists} onChange={handleChange} required />
-        <input name="headshotPercentage" type="number" placeholder="HS%" value={formData.headshotPercentage} onChange={handleChange} required />
-        <input name="firstKills" type="number" placeholder="First Kills" value={formData.firstKills} onChange={handleChange} required />
-        <input name="firstDeaths" type="number" placeholder="First Deaths" value={formData.firstDeaths} onChange={handleChange} required />
-        <input name="multiKills" type="number" placeholder="Multi Kills" value={formData.multiKills} onChange={handleChange} required />
-        <textarea name="memo" placeholder="Memo" value={formData.memo} onChange={handleChange}></textarea>
-        <button type="submit">Add Stat</button>
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '10px', maxWidth: '600px', margin: '0 auto' }}>
+        <label>
+          Map:
+          <input name="map" value={formData.map} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Character:
+          <input name="character" value={formData.character} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          ACS:
+          <input name="acs" type="number" value={formData.acs} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Kills:
+          <input name="kills" type="number" value={formData.kills} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Deaths:
+          <input name="deaths" type="number" value={formData.deaths} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Assists:
+          <input name="assists" type="number" value={formData.assists} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Headshot %:
+          <input name="headshotPercentage" type="number" value={formData.headshotPercentage} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          First Kills:
+          <input name="firstKills" type="number" value={formData.firstKills} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          First Deaths:
+          <input name="firstDeaths" type="number" value={formData.firstDeaths} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Multi Kills:
+          <input name="multiKills" type="number" value={formData.multiKills} onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <label>
+          Memo:
+          <textarea name="memo" value={formData.memo} onChange={handleChange} style={{ width: '100%', padding: '8px' }} />
+        </label>
+        <button type="submit" style={{ padding: '10px', backgroundColor: '#007BFF', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Add Stat
+        </button>
       </form>
-
-      {/* スタッツ一覧 */}
-      <table border={1}>
+      {/* テーブル */}
+      <table style={{ marginTop: '20px', width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th>Map</th>
-            <th>Character</th>
-            <th>ACS</th>
-            <th>K/D/A</th>
-            <th>HS%</th>
-            <th>FK/FD</th>
-            <th>Multi Kills</th>
-            <th>Memo</th>
-            <th>Actions</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Map</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Character</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>ACS</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>K/D/A</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>HS%</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>FK/FD</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Multi Kills</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Memo</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {stats.map((stat) => (
             <tr key={stat.id}>
-              <td>{stat.map}</td>
-              <td>{stat.character}</td>
-              <td>{stat.acs}</td>
-              <td>{`${stat.kills}/${stat.deaths}/${stat.assists}`}</td>
-              <td>{stat.headshotPercentage}%</td>
-              <td>{`${stat.firstKills}/${stat.firstDeaths}`}</td>
-              <td>{stat.multiKills}</td>
-              <td>{stat.memo}</td>
-              <td>
-                <button onClick={() => handleDelete(stat.id)}>Delete</button>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.map}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.character}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.acs}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{`${stat.kills}/${stat.deaths}/${stat.assists}`}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.headshotPercentage}%</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{`${stat.firstKills}/${stat.firstDeaths}`}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.multiKills}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>{stat.memo}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>
+                <button onClick={() => handleDelete(stat.id)} style={{ padding: '5px 10px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
+import { Button } from "@chakra-ui/react";
+import supabase from "@/lib/supabase";
 
 type Stat = {
   id: string;
@@ -31,18 +33,37 @@ const Home: React.FC = () => {
     multiKills: 0,
     memo: '',
   });
+  const [session, setSession] = useState<any>(null);
 
-  // データ取得
+  // セッションの取得
   useEffect(() => {
-    fetchStats();
+    const fetchSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+
+    fetchSession();
+
+    // サブスクリプションでセッションの変化を監視
+    const { subscription } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get<Stat[]>('/api/stats');
-      setStats(response.data);
+      // ログイン中のみデータを取得
+      if (session) {
+        const response = await fetch("/api/stats");
+        const data = await response.json();
+        setStats(data);
+      }
     } catch (error) {
-      console.error('Failed to fetch stats:', error);
+      console.error("Failed to fetch stats:", error);
     }
   };
 
@@ -85,6 +106,19 @@ const Home: React.FC = () => {
       console.error('Failed to delete stat:', error);
     }
   };
+
+    // Supabase 認証: GitHub サインイン
+    const GitHubSignIn = async () => {
+      await supabase.auth.signInWithOAuth({
+        provider: "github",
+      });
+    };
+  
+    // Supabase 認証: サインアウト
+    const SignOut = async () => {
+      await supabase.auth.signOut();
+      setSession(null);
+    };
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>

@@ -12,11 +12,14 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@supabase/supabase-js": "^2.47.12",
     "axios": "^1.7.9",
     "framer-motion": "^6",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "recoil": "^0.7.7",
+    "supabase": "^2.2.1"
   },
   "devDependencies": {
     "@types/node": "^20",

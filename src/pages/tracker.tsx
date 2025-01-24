@@ -1,32 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import supabase from "../lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 const Tracker: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const [gameName, setGameName] = useState('');
   const [tagLine, setTagLine] = useState('');
-  const [puuid, setPuuid] = useState(''); //const [puuid, setPuuid] = useState('');
+  const [puuid, setPuuid] = useState('');
   const [accountData, setAccountData] = useState<{ puuid: string; gameName: string; tagLine: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // プレイヤー情報取得
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (error || !data?.user) {
+          router.replace("/login");
+        } else {
+          setUser(data.user);
+        }
+      } catch (err) {
+        console.error("認証エラー:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("ログアウトに失敗しました:", error.message);
+    } else {
+      console.log("ログアウトに成功しました");
+      router.replace("/login");  // ログアウト後に確実にリダイレクト
+    }
+  };
+
   const fetchPlayerInfo = async () => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/riot/account`, {
         gameName,
         tagLine,
-      },{ withCredentials: true });
+      }, { withCredentials: true });
       console.log('Player Info:', response.data);
-      setPuuid(response.data.puuid);  // PUUIDを保存
-      setAccountData(response.data);  // プレイヤー情報を保存
-      setErrorMessage('');            // エラーメッセージをリセット
+      setPuuid(response.data.puuid);
+      setAccountData(response.data);
+      setErrorMessage('');
     } catch (error) {
       console.error('Failed to fetch player info:', error);
       setErrorMessage('プレイヤー情報の取得に失敗しました。');
     }
   };
 
-  // 試合履歴取得（API制限により未実装）
   const fetchMatchHistory = async () => {
     if (!puuid) {
       alert('PUUIDが取得されていません。プレイヤー情報を先に取得してください。');
@@ -35,11 +68,39 @@ const Tracker: React.FC = () => {
     alert(`試合情報（PUUID: ${puuid}）は現在取得できません。Riot APIの権限が不足しています。`);
   };
 
+  if (loading) {
+    return <p style={{ textAlign: 'center', fontSize: '24px', paddingTop: '50px' }}>Loading...</p>;
+  }
 
- 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+        <button onClick={handleLogout}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#ff4d4f',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          ログアウト
+        </button>
+      </div>
+
       <h1 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center' }}>プレイヤー情報とマッチ情報</h1>
+
+      {user?.email ? (
+        <p style={{ textAlign: 'center', fontSize: '18px', color: 'green' }}>
+          ログイン中: {user?.email}
+        </p>
+      ) : (
+        <p style={{ textAlign: 'center', fontSize: '18px', color: 'red' }}>
+          ログイン情報が見つかりません
+        </p>
+      )}
 
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
         <input
@@ -71,9 +132,7 @@ const Tracker: React.FC = () => {
           プレイヤー情報を取得
         </button>
       </div>
-
       {errorMessage && <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>}
-
       {accountData && (
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
           <h2>プレイヤー情報:</h2>

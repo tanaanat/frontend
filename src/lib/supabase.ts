@@ -1,7 +1,10 @@
-import { Session } from "@supabase/supabase-js";
-import { atom } from "recoil";
+import { createClient } from '@supabase/supabase-js';
 
-export const sessionState = atom<Session | null>({
-  key: "sessionState",
-  default: null,
-});
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+// Supabaseクライアントの作成
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export default supabase;
+

@@ -4,7 +4,7 @@ import axios from 'axios';
 const Home: React.FC = () => {
   const [gameName, setGameName] = useState('');
   const [tagLine, setTagLine] = useState('');
-  const [puuid, setPuuid] = useState('');
+  const [, setPuuid] = useState(''); //const [puuid, setPuuid] = useState('');
   const [accountData, setAccountData] = useState<{ puuid: string; gameName: string; tagLine: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 

@@ -10,12 +10,16 @@ const Navbar = () => {
     // ユーザーのログイン状態を確認
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("ユーザー取得エラー:", error.message);
+      }
       if (data?.user) {
         setUser(data.user);
       } else {
         setUser(null);
       }
     };
+    
 
     checkUser();
   }, []);

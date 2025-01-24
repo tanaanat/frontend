@@ -14,7 +14,7 @@ const Home: React.FC = () => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/riot/account`, {
         gameName,
         tagLine,
-      });
+      },{ withCredentials: true });
       console.log('Player Info:', response.data);
       setPuuid(response.data.puuid);  // PUUIDを保存
       setAccountData(response.data);  // プレイヤー情報を保存

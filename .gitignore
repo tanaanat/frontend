@@ -38,3 +38,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# フロントエンド用 環境変数をgithubに上げないように
+node_modules/
+.next/
+.env

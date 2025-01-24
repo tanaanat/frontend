@@ -4,7 +4,7 @@ import axios from 'axios';
 const Home: React.FC = () => {
   const [gameName, setGameName] = useState('');
   const [tagLine, setTagLine] = useState('');
-  const [, setPuuid] = useState(''); //const [puuid, setPuuid] = useState('');
+  const [puuid, setPuuid] = useState(''); //const [puuid, setPuuid] = useState('');
   const [accountData, setAccountData] = useState<{ puuid: string; gameName: string; tagLine: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -27,8 +27,14 @@ const Home: React.FC = () => {
 
   // 試合履歴取得（API制限により未実装）
   const fetchMatchHistory = async () => {
-    alert('試合情報は現在取得できません。Riot APIの権限が不足しています。');
+    if (!puuid) {
+      alert('PUUIDが取得されていません。プレイヤー情報を先に取得してください。');
+      return;
+    }
+    alert(`試合情報（PUUID: ${puuid}）は現在取得できません。Riot APIの権限が不足しています。`);
   };
+
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>Valorant Account Tracker</h1>
